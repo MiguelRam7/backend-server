@@ -9,7 +9,9 @@ var Usuario = require('../models/usuario');
 var SEED = require('../config/config').SEED;
 var app = express();
 
-
+// ==========================================
+// LOGIN
+// ==========================================
 
 app.post('/', (req, res) => {
 
@@ -28,7 +30,7 @@ app.post('/', (req, res) => {
         if (!usuarioDB) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Credenciales incorrectas - email',
+                mensaje: 'Credenciales incorrectas',
                 errors: err
             })
         }
@@ -36,13 +38,14 @@ app.post('/', (req, res) => {
         if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Credenciales incorrectas - password',
+                mensaje: 'Credenciales incorrectas',
                 errors: err
             })
         }
 
         // crear token!!!
         usuarioDB.password = ':D';
+        
         //var token = jwt.sign({objeto a guardar en el token}, SEED-Semilla, { tiempo de expiracion del token });
         var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 });// 14400/60/60=4hrs
 
